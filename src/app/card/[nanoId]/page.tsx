@@ -2,6 +2,7 @@ import { supabaseServer } from '@/lib/supabase-server';
 import ExtratoPaginated from '@/components/ExtratoPaginated';
 import Cardapio from '@/components/Cardapio';
 import Sponsors from '@/components/Sponsors';
+import { formatBRL } from '@/lib/format';
 
 const PAGE_SIZE = 20;
 
@@ -52,27 +53,29 @@ export default async function CardPage({
     }
 
     return (
-        <main className="max-w-md mx-auto p-4 space-y-8">
+        <main className="app-container">
+
             {/* HEADER */}
-            <header>
-                <h1 className="text-xl font-semibold">{card.evento_nome}</h1>
-                <p className="text-sm text-gray-500">
+            <header className="section">
+                <h1 className="title-md">{card.evento_nome}</h1>
+                <p className="text-muted">
                     Cartão • {card.codigo_unico}
                 </p>
             </header>
 
             {/* SALDO */}
-            <section className="bg-gray-900 text-white rounded-2xl p-6">
-                <p className="text-sm opacity-80">Saldo disponível</p>
-                <p className="text-4xl font-bold">
-                    R$ {Number(card.saldo).toFixed(2)}
+            <section className="section card">
+                <p className="text-muted">Saldo disponível</p>
+                <p className="text-primary" style={{ fontSize: '2.5rem' }}>
+                    {formatBRL(card.saldo)}
                 </p>
             </section>
 
             {/* CARDÁPIO */}
             <Cardapio itens={itens ?? []} />
 
-            {patrocinadores && patrocinadores.length > 0 && (
+            {/* PATROCINADORES */}
+            {patrocinadores?.length > 0 && (
                 <Sponsors patrocinadores={patrocinadores} />
             )}
 

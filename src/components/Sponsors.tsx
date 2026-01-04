@@ -15,36 +15,18 @@ export default function Sponsors({
         Patrocinadores
       </h2>
 
-      <div className="grid grid-cols-3 gap-4 items-center">
-        {patrocinadores.map((p, index) => {
-          const content = (
-            <div className="flex items-center justify-center h-16 bg-white rounded-lg border">
-              {p.logo_url ? (
-                <img
-                  src={p.logo_url}
-                  alt={p.nome}
-                  className="max-h-10 object-contain"
-                />
-              ) : (
-                <span className="text-xs text-gray-400">{p.nome}</span>
-              )}
-            </div>
-          );
-
-          return p.link_site ? (
-            <a
-              key={index}
-              href={p.link_site}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {content}
-            </a>
-          ) : (
-            <div key={index}>{content}</div>
-          );
-        })}
+      <div className="grid">
+        {patrocinadores.map((p, i) => (
+          <div key={i} className="card card-hover" style={{ textAlign: 'center' }}>
+            {p.logo_url ? (
+              <img src={p.logo_url} alt={p.nome} style={{ maxHeight: 40 }} />
+            ) : (
+              <span className="text-muted">{p.nome}</span>
+            )}
+          </div>
+        ))}
       </div>
+
     </section>
   );
 }

@@ -1,3 +1,5 @@
+import { formatBRL } from "@/lib/format";
+
 type ExtratoItem = {
   tipo: 'recarga' | 'consumo';
   valor: number;
@@ -45,7 +47,7 @@ export default function Extrato({
                 }`}
               >
                 {isRecarga ? '+' : '-'} R${' '}
-                {Number(item.valor).toFixed(2)}
+                {formatBRL(item.valor)}
               </p>
             </div>
           );

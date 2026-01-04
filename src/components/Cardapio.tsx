@@ -1,3 +1,5 @@
+import { formatBRL } from "@/lib/format";
+
 type Item = {
   id: string;
   nome: string;
@@ -10,22 +12,20 @@ export default function Cardapio({ itens }: { itens: Item[] }) {
   }
 
   return (
-    <section className="space-y-3">
-      <h2 className="text-lg font-semibold">Cardápio</h2>
+    <section className="section">
+      <h2 className="title-sm">Cardápio</h2>
 
-      <div className="bg-white rounded-xl border divide-y">
+      <div className="card list card-hover">
         {itens.map((item) => (
-          <div
-            key={item.id}
-            className="flex justify-between items-center px-4 py-3"
-          >
-            <p className="font-medium">{item.nome}</p>
-            <p className="font-semibold text-gray-800">
-              R$ {Number(item.preco_padrao).toFixed(2)}
-            </p>
+          <div key={item.id} className="list-item">
+            <span>{item.nome}</span>
+            <span className="text-primary">
+              {formatBRL(item.preco_padrao)}
+            </span>
           </div>
         ))}
       </div>
     </section>
+
   );
 }

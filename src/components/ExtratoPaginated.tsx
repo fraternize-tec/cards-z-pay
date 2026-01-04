@@ -56,28 +56,28 @@ export default function ExtratoPaginated({
     <section className="space-y-4">
       <h2 className="text-lg font-semibold">Movimentações</h2>
 
-      <div className="divide-y">
+      <div className="list">
         {items.map((item, index) => {
           const isRecarga = item.tipo === 'recarga';
 
           return (
-            <div key={index} className="flex justify-between py-3">
+            <div key={index} className="list-item">
               <div>
-                <p className="font-medium capitalize">
+                <p className="title-sm">
                   {isRecarga ? 'Recarga' : 'Consumo'}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-muted">
                   {new Date(item.criado_em).toLocaleString('pt-BR')}
                 </p>
               </div>
 
-              <p
-                className={`font-semibold ${
-                  isRecarga ? 'text-green-600' : 'text-red-600'
-                }`}
+              <span
+                className={
+                  isRecarga ? 'value-positive' : 'value-negative'
+                }
               >
                 {isRecarga ? '+' : '-'} R$ {item.valor.toFixed(2)}
-              </p>
+              </span>
             </div>
           );
         })}
@@ -87,11 +87,12 @@ export default function ExtratoPaginated({
         <button
           onClick={loadMore}
           disabled={loading}
-          className="w-full py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50"
+          className="button"
         >
           {loading ? 'Carregando...' : 'Carregar mais'}
         </button>
       )}
+
     </section>
   );
 }
