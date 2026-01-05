@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { supabaseServer } from '@/lib/supabase-server';
+import { formatBRL } from '@/lib/format';
 
 type ExtratoItem = {
   tipo: 'recarga' | 'consumo';
@@ -61,8 +62,14 @@ export default function ExtratoPaginated({
           const isRecarga = item.tipo === 'recarga';
 
           return (
-            <div key={index} className="list-item">
-              <div>
+            <div key={index} className="list-item" style={{ gap: 12 }}>
+              {/* Ícone */}
+              <div className={`tx-icon ${isRecarga ? 'recarga' : 'consumo'}`}>
+                {isRecarga ? '⬆︎' : '⬇︎'}
+              </div>
+
+              {/* Texto */}
+              <div style={{ flex: 1 }}>
                 <p className="title-sm">
                   {isRecarga ? 'Recarga' : 'Consumo'}
                 </p>
@@ -71,14 +78,12 @@ export default function ExtratoPaginated({
                 </p>
               </div>
 
-              <span
-                className={
-                  isRecarga ? 'value-positive' : 'value-negative'
-                }
-              >
-                {isRecarga ? '+' : '-'} R$ {item.valor.toFixed(2)}
+              {/* Valor */}
+              <span className={isRecarga ? 'value-positive' : 'value-negative'}>
+                {isRecarga ? '+' : '-'} {formatBRL(item.valor)}
               </span>
             </div>
+
           );
         })}
       </div>

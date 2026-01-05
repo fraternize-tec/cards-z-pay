@@ -53,39 +53,69 @@ export default async function CardPage({
         );
     }
 
+    const safeExtrato = extrato ?? [];
+    const safeItens = itens ?? [];
+    const safePatrocinadores = patrocinadores ?? [];
+
     return (
         <main className="app-container">
 
             {/* HEADER */}
             <header className="section" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div>
-                    <h1 className="title-md">{card.evento_nome}</h1>
-                    <p className="text-muted">Cartão • {card.codigo_unico}</p>
+                <div className="card-header">
+                    <div className="brand">
+                        <div className="brand-logo">Z</div>
+                        <span>Zpay</span>
+                    </div>
                 </div>
 
                 <ThemeToggle />
             </header>
 
 
-            {/* SALDO */}
-            <section className="section card">
-                <p className="text-muted">Saldo disponível</p>
-                <p className="text-primary" style={{ fontSize: '2.5rem' }}>
-                    {formatBRL(card.saldo)}
-                </p>
+            <section className="section card card-hover">
+                {/* Header do card */}
+
+
+                {/* Informações do cartão */}
+                <div className="card-meta">
+                    <p className="title-sm">{card.evento_nome}</p>
+
+                    <p className="text-muted card-code">
+                        Cartão • {card.codigo_unico}
+                    </p>
+
+                    <span
+                        className={`card-status ${card.bloqueado ? 'blocked' : 'active'
+                            }`}
+                    >
+                        <span className="card-status-dot" />
+                        {card.bloqueado ? 'Bloqueado' : 'Ativo'}
+                    </span>
+                </div>
+
+                {/* Saldo */}
+                <div>
+                    <p className="text-muted">Saldo disponível</p>
+                    <p className="text-primary" style={{ fontSize: '2.75rem' }}>
+                        {formatBRL(card.saldo)}
+                    </p>
+                </div>
+
             </section>
 
+
             {/* CARDÁPIO */}
-            <Cardapio itens={itens ?? []} />
+            <Cardapio itens={safeItens ?? []} />
 
             {/* PATROCINADORES */}
-            {patrocinadores?.length > 0 && (
-                <Sponsors patrocinadores={patrocinadores} />
+            {safePatrocinadores.length > 0 && (
+                <Sponsors patrocinadores={safePatrocinadores} />
             )}
 
             {/* EXTRATO */}
             <ExtratoPaginated
-                initialData={extrato ?? []}
+                initialData={safeExtrato ?? []}
                 nanoId={nanoId}
                 pageSize={PAGE_SIZE}
             />
