@@ -3,8 +3,9 @@ import ExtratoPaginated from '@/components/ExtratoPaginated';
 import Cardapio from '@/components/Cardapio';
 import Sponsors from '@/components/Sponsors';
 import { formatBRL } from '@/lib/format';
+import ThemeToggle from '@/components/ThemeToggle';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 5;
 
 export default async function CardPage({
     params,
@@ -56,12 +57,15 @@ export default async function CardPage({
         <main className="app-container">
 
             {/* HEADER */}
-            <header className="section">
-                <h1 className="title-md">{card.evento_nome}</h1>
-                <p className="text-muted">
-                    Cartão • {card.codigo_unico}
-                </p>
+            <header className="section" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                    <h1 className="title-md">{card.evento_nome}</h1>
+                    <p className="text-muted">Cartão • {card.codigo_unico}</p>
+                </div>
+
+                <ThemeToggle />
             </header>
+
 
             {/* SALDO */}
             <section className="section card">
