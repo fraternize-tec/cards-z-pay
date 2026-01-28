@@ -339,3 +339,455 @@ html[data-theme='light'] .button:hover:not(:disabled) {
   background: rgba(229, 83, 61, 0.15);
   color: var(--color-danger);
 }
+
+.extrato-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.back-btn {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.segmented {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-soft);
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.segmented button {
+  flex: 1;
+  padding: 6px 0;
+  border-radius: 8px;
+  font-size: 0.75rem;
+}
+
+.segmented button.active {
+  background: var(--primary);
+  color: white;
+}
+
+.extrato-detalhe {
+  padding: 8px 16px 12px;
+  background: var(--bg-soft);
+  border-left: 3px solid var(--primary);
+}
+
+.detalhe-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detalhe-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+
+/* ============================= */
+/* 📱 EXTRATO PREMIUM            */
+/* ============================= */
+
+.extrato-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(12px);
+  background: rgba(14, 42, 51, 0.85);
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme='light'] .extrato-topbar {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.filter-pills button {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.filter-pills button.active {
+  background: var(--color-primary);
+  color: #0e2a33;
+  border-color: transparent;
+}
+
+.extrato-list {
+  margin-top: 12px;
+}
+
+.extrato-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.extrato-item {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.extrato-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
+
+.extrato-info span {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+.extrato-expand {
+  padding: 8px 16px 14px;
+  animation: fadeUp 0.25s ease;
+}
+
+.expand-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.expand-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  padding: 6px 0;
+}
+
+/* ============================= */
+/* ✨ DETALHE EXPANSÍVEL         */
+/* ============================= */
+
+.expand-wrapper {
+  overflow: hidden;
+  animation: expand 0.35s ease forwards;
+}
+
+@keyframes expand {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
+  }
+}
+
+.expand-content {
+  padding: 10px 16px 16px;
+}
+
+.expand-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme='light'] .expand-card {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.expand-title {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 10px;
+}
+
+.expand-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.expand-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+/* ============================= */
+/* 🦴 SKELETON                   */
+/* ============================= */
+
+.expand-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.08)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+/* ============================= */
+/* 🍔 CARDÁPIO PREMIUM           */
+/* ============================= */
+
+.cardapio-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(12px);
+  background: rgba(14, 42, 51, 0.9);
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme='light'] .cardapio-topbar {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+html[data-theme='light'] .search-box {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.search-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  color: inherit;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.search-icon {
+  opacity: 0.6;
+}
+
+.cardapio-list {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardapio-item {
+  background: var(--color-surface);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+html[data-theme='light'] .cardapio-item {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.item-name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.item-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* ============================= */
+/* 🏠 HOME DO CARTÃO             */
+/* ============================= */
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.home-card {
+  margin-bottom: 20px;
+}
+
+
+.saldo-valor {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+/* AÇÕES */
+.home-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.action-card {
+  background: var(--color-surface);
+  border-radius: 18px;
+  padding: 16px;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+}
+
+.action-icon {
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+
+.action-card span {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* SEÇÃO */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.link-primary {
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* ✨ animação do saldo */
+.animate-balance {
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.92);
+    opacity: 0.4;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 🎯 ícones profissionais */
+.action-icon {
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 6px;
+  border-radius: 12px;
+  background: rgba(247, 147, 30, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--color-primary);
+  fill: none;
+  stroke-width: 2;
+}
+
+/* 🦴 skeleton */
+.skeleton-card {
+  height: 130px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.06)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+/* layout sem <br/> */
+.saldo-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 18px;
+}
+
+/* ============================= */
+/* 🔁 ÍCONE EXTRATO HOME         */
+/* ============================= */
+
+.extrato-row-home {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.extrato-info-home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.extrato-info-home strong {
+  font-size: 0.9rem;
+}
+
+.extrato-info-home p {
+  font-size: 0.75rem;
+  margin: 0;
+}
+
