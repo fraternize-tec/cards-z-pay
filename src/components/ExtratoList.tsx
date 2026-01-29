@@ -7,7 +7,7 @@ import { supabaseServer } from '@/lib/supabase-server';
 
 type Item = {
     operacao_id: string;
-    tipo: 'recarga' | 'consumo';
+    tipo: 'recarga' | 'consumo' | 'taxa';
     valor: number;
     criado_em: string;
 };
@@ -22,7 +22,7 @@ export default function ExtratoList({
     const router = useRouter();
 
     const [filtro, setFiltro] =
-        useState<'todos' | 'recarga' | 'consumo'>('todos');
+        useState<'todos' | 'recarga' | 'consumo' | 'taxa'>('todos');
 
     const [aberto, setAberto] = useState<string | null>(null);
     const [detalhe, setDetalhe] = useState<any>(null);
@@ -100,7 +100,9 @@ export default function ExtratoList({
                                     <strong>
                                         {item.tipo === 'recarga'
                                             ? 'Recarga'
-                                            : 'Consumo'}
+                                            : item.tipo === 'taxa'
+                                                ? 'Taxa de ativação'
+                                                : 'Consumo'}
                                     </strong>
                                     <span>
                                         {new Date(item.criado_em).toLocaleString('pt-BR')}
@@ -136,6 +138,18 @@ export default function ExtratoList({
                                                 <span className="expand-title">Forma de pagamento</span>
                                                 <div className="expand-highlight">
                                                     {detalhe.detalhes.forma_pagamento}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {!loading && item.tipo === 'taxa' && (
+                                            <div className="expand-card">
+                                                <span className="expand-title">
+                                                    Taxa de ativação do cartão
+                                                </span>
+
+                                                <div className="expand-highlight">
+                                                    Cobrada na primeira recarga
                                                 </div>
                                             </div>
                                         )}

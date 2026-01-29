@@ -190,7 +190,11 @@ export default function CardPage({
                                 {/* TEXTO */}
                                 <div className="extrato-info-home">
                                     <strong>
-                                        {item.tipo === 'recarga' ? 'Recarga' : 'Consumo'}
+                                        {item.tipo === 'recarga'
+                                            ? 'Recarga'
+                                            : item.tipo === 'taxa'
+                                                ? 'Taxa de ativação'
+                                                : 'Consumo'}
                                     </strong>
                                     <p className="text-muted">
                                         {new Date(item.criado_em).toLocaleString('pt-BR')}
