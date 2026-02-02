@@ -791,3 +791,34 @@ html[data-theme='light'] .cardapio-item {
   margin: 0;
 }
 
+.extrato-item.cancelado {
+  opacity: 0.5;
+}
+
+.tx-icon.cancelado {
+  background: #ccc;
+  color: #555;
+}
+
+.value-cancelled {
+  color: #888;
+  text-decoration: line-through;
+}
+
+.cancel-badge {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #b00020;
+  font-weight: 600;
+}
+
+.expand-cancelado {
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  background: #fdecea;
+  color: #b00020;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+

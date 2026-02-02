@@ -10,7 +10,20 @@ type Item = {
     tipo: 'recarga' | 'consumo' | 'taxa';
     valor: number;
     criado_em: string;
+    cancelado: boolean;
+    cancelado_em?: string;
 };
+
+type DetalheOperacao = {
+    operacao_id: string;
+    tipo: 'recarga' | 'consumo';
+    valor: number;
+    criado_em: string;
+    cancelado: boolean;
+    cancelado_em?: string;
+    detalhes: any;
+};
+
 
 export default function ExtratoList({
     nanoId,
@@ -25,7 +38,7 @@ export default function ExtratoList({
         useState<'todos' | 'recarga' | 'consumo' | 'taxa'>('todos');
 
     const [aberto, setAberto] = useState<string | null>(null);
-    const [detalhe, setDetalhe] = useState<any>(null);
+    const [detalhe, setDetalhe] = useState<DetalheOperacao | null>(null);
     const [loading, setLoading] = useState(false);
 
     const filtrados = items.filter(i =>
@@ -87,13 +100,16 @@ export default function ExtratoList({
                     const abertoAqui = aberto === item.operacao_id;
 
                     return (
-                        <div key={item.operacao_id} className="extrato-item">
+                        <div
+                            key={item.operacao_id}
+                            className={`extrato-item ${item.cancelado ? 'cancelado' : ''}`}
+                        >
                             <div
                                 className="extrato-row"
                                 onClick={() => toggle(item)}
                             >
-                                <div className={`tx-icon ${item.tipo}`}>
-                                    {item.tipo === 'recarga' ? '↑' : '↓'}
+                                <div className={`tx-icon ${item.cancelado ? 'cancelado' : item.tipo}`}>
+                                    {item.cancelado ? '✕' : item.tipo === 'recarga' ? '↑' : '↓'}
                                 </div>
 
                                 <div className="extrato-info">
@@ -104,6 +120,11 @@ export default function ExtratoList({
                                                 ? 'Taxa de ativação'
                                                 : 'Consumo'}
                                     </strong>
+                                    {item.cancelado && (
+                                        <span className="cancel-badge">
+                                            Cancelado
+                                        </span>
+                                    )}
                                     <span>
                                         {new Date(item.criado_em).toLocaleString('pt-BR')}
                                     </span>
@@ -111,12 +132,14 @@ export default function ExtratoList({
 
                                 <div
                                     className={
-                                        item.tipo === 'recarga'
-                                            ? 'value-positive'
-                                            : 'value-negative'
+                                        item.cancelado
+                                            ? 'value-cancelled'
+                                            : item.tipo === 'recarga'
+                                                ? 'value-positive'
+                                                : 'value-negative'
                                     }
                                 >
-                                    {item.tipo === 'recarga' ? '+' : '-'}
+                                    {item.cancelado ? '' : item.tipo === 'recarga' ? '+' : '-'}
                                     {formatBRL(item.valor)}
                                 </div>
                             </div>
@@ -132,6 +155,16 @@ export default function ExtratoList({
                                                 <div className="skeleton-line short" />
                                             </div>
                                         )}
+
+                                        {!loading && detalhe?.cancelado && (
+                                            <div className="expand-cancelado">
+                                                Operação cancelada em{' '}
+                                                <strong>
+                                                    {new Date(detalhe.cancelado_em!).toLocaleString('pt-BR')}
+                                                </strong>
+                                            </div>
+                                        )}
+
 
                                         {!loading && detalhe?.tipo === 'recarga' && (
                                             <div className="expand-card">

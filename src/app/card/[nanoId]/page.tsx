@@ -179,12 +179,8 @@ export default function CardPage({
                                 key={item.operacao_id}
                                 className="list-item extrato-row-home"
                             >
-                                {/* ÍCONE */}
-                                <div
-                                    className={`tx-icon ${item.tipo === 'recarga' ? 'recarga' : 'consumo'
-                                        }`}
-                                >
-                                    {item.tipo === 'recarga' ? '↑' : '↓'}
+                                <div className={`tx-icon ${item.cancelado ? 'cancelado' : item.tipo}`}>
+                                    {item.cancelado ? '✕' : item.tipo === 'recarga' ? '↑' : '↓'}
                                 </div>
 
                                 {/* TEXTO */}
@@ -196,22 +192,30 @@ export default function CardPage({
                                                 ? 'Taxa de ativação'
                                                 : 'Consumo'}
                                     </strong>
+                                    {item.cancelado && (
+                                        <span className="cancel-badge">
+                                            Cancelado
+                                        </span>
+                                    )}
                                     <p className="text-muted">
                                         {new Date(item.criado_em).toLocaleString('pt-BR')}
                                     </p>
                                 </div>
 
                                 {/* VALOR */}
-                                <span
+                                <div
                                     className={
-                                        item.tipo === 'recarga'
-                                            ? 'value-positive'
-                                            : 'value-negative'
+                                        item.cancelado
+                                            ? 'value-cancelled'
+                                            : item.tipo === 'recarga'
+                                                ? 'value-positive'
+                                                : 'value-negative'
                                     }
                                 >
-                                    {item.tipo === 'recarga' ? '+' : '-'}
+                                    {item.cancelado ? '' : item.tipo === 'recarga' ? '+' : '-'}
                                     {formatBRL(item.valor)}
-                                </span>
+                                </div>
+
                             </div>
                         ))}
                     </div>
