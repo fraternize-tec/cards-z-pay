@@ -822,3 +822,29 @@ html[data-theme='light'] .cardapio-item {
   font-weight: 500;
 }
 
+.cancel-badge.parcial {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.expand-item.item-parcial {
+  background: rgba(255, 193, 7, 0.08);
+  border-radius: 6px;
+  padding: 6px;
+}
+
+.cancel-info {
+  display: block;
+  font-size: 12px;
+  color: #d97706;
+}
+
+.value-adjusted {
+  color: #d97706;
+}
+
+.expand-cancelado.parcial {
+  background: #fff8e1;
+  color: #92400e;
+  border-left: 4px solid #f59e0b;
+}

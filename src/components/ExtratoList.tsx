@@ -135,8 +135,8 @@ export default function ExtratoList({
                                         item.cancelado
                                             ? 'value-cancelled'
                                             : item.tipo === 'recarga'
-                                                ? 'value-positive'
-                                                : 'value-negative'
+                                            ? 'value-positive'
+                                            : 'value-negative'
                                     }
                                 >
                                     {item.cancelado ? '' : item.tipo === 'recarga' ? '+' : '-'}
@@ -156,7 +156,7 @@ export default function ExtratoList({
                                             </div>
                                         )}
 
-                                        {!loading && detalhe?.cancelado && (
+                                        {!loading && detalhe?.cancelado && detalhe?.tipo === 'recarga' && (
                                             <div className="expand-cancelado">
                                                 Operação cancelada em{' '}
                                                 <strong>
@@ -164,6 +164,28 @@ export default function ExtratoList({
                                                 </strong>
                                             </div>
                                         )}
+
+                                        {!loading && detalhe?.tipo === 'consumo' && detalhe.cancelado && (() => {
+                                            const totalConsumido = detalhe.detalhes.reduce(
+                                                (s: number, i: any) => s + i.quantidade_consumida,
+                                                0
+                                            )
+                                            const totalCancelado = detalhe.detalhes.reduce(
+                                                (s: number, i: any) => s + i.quantidade_cancelada,
+                                                0
+                                            )
+
+                                            const parcial = totalCancelado > 0 && totalCancelado < totalConsumido
+
+                                            return (
+                                                <div className={`expand-cancelado ${parcial ? 'parcial' : ''}`}>
+                                                    {parcial ? 'Cancelamento parcial' : 'Operação cancelada'} em{' '}
+                                                    <strong>
+                                                        {new Date(detalhe.cancelado_em!).toLocaleString('pt-BR')}
+                                                    </strong>
+                                                </div>
+                                            )
+                                        })()}
 
 
                                         {!loading && detalhe?.tipo === 'recarga' && (
@@ -192,19 +214,47 @@ export default function ExtratoList({
                                                 <span className="expand-title">Itens consumidos</span>
 
                                                 <div className="expand-items">
-                                                    {detalhe.detalhes.map((i: any, idx: number) => (
-                                                        <div key={idx} className="expand-item">
-                                                            <span>
-                                                                {i.quantidade}x {i.item}
-                                                            </span>
-                                                            <strong>
-                                                                {formatBRL(i.valor_total)}
-                                                            </strong>
-                                                        </div>
-                                                    ))}
+                                                    {detalhe.detalhes.map((i: any, idx: number) => {
+                                                        const totalItens = detalhe.detalhes.length
+
+                                                        const itensTotalmenteCancelados = detalhe.detalhes.filter(
+                                                            (i: any) => i.quantidade_cancelada === i.quantidade_consumida
+                                                        ).length
+
+                                                        const parcial =
+                                                            itensTotalmenteCancelados > 0 &&
+                                                            itensTotalmenteCancelados < totalItens
+
+                                                        return (
+                                                            <div
+                                                                key={idx}
+                                                                className={`expand-item ${parcial ? 'item-parcial' : ''}`}
+                                                            >
+                                                                <div>
+                                                                    <span>
+                                                                        {i.quantidade_consumida}x {i.item}
+                                                                    </span>
+
+                                                                    {parcial && (
+                                                                        <small className="cancel-info">
+                                                                            Cancelado: {i.quantidade_cancelada}x (
+                                                                            {formatBRL(i.valor_estornado)})
+                                                                        </small>
+                                                                    )}
+                                                                </div>
+
+                                                                <strong className={parcial ? 'value-adjusted' : ''}>
+                                                                    {formatBRL(
+                                                                        i.valor_total - i.valor_estornado
+                                                                    )}
+                                                                </strong>
+                                                            </div>
+                                                        )
+                                                    })}
                                                 </div>
                                             </div>
                                         )}
+
                                     </div>
                                 </div>
                             )}
