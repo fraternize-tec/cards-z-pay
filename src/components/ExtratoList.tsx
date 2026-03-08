@@ -7,11 +7,12 @@ import { supabaseServer } from '@/lib/supabase-server';
 
 type Item = {
     operacao_id: string;
-    tipo: 'recarga' | 'consumo' | 'taxa';
+    tipo: 'recarga' | 'consumo' | 'taxa' | 'devolucao';
     valor: number;
     criado_em: string;
     cancelado: boolean;
-    cancelado_em?: string;
+    cancelado_em?: string | null;
+    cancelamento_tipo?: 'total' | 'parcial' | null;
 };
 
 type DetalheOperacao = {
@@ -34,8 +35,7 @@ export default function ExtratoList({
 }) {
     const router = useRouter();
 
-    const [filtro, setFiltro] =
-        useState<'todos' | 'recarga' | 'consumo' | 'taxa'>('todos');
+    const [filtro, setFiltro] = useState<'todos' | 'recarga' | 'consumo' | 'devolucao'>('todos');
 
     const [aberto, setAberto] = useState<string | null>(null);
     const [detalhe, setDetalhe] = useState<DetalheOperacao | null>(null);
@@ -46,6 +46,9 @@ export default function ExtratoList({
     );
 
     async function toggle(item: Item) {
+        if (item.tipo === 'devolucao') {
+            return;
+        }
         if (aberto === item.operacao_id) {
             setAberto(null);
             setDetalhe(null);
@@ -78,7 +81,7 @@ export default function ExtratoList({
                 </button>
 
                 <div className="filter-pills">
-                    {['todos', 'recarga', 'consumo'].map(t => (
+                    {['todos', 'recarga', 'consumo', 'devolucao'].map(t => (
                         <button
                             key={t}
                             className={filtro === t ? 'active' : ''}
@@ -88,7 +91,9 @@ export default function ExtratoList({
                                 ? 'Todos'
                                 : t === 'recarga'
                                     ? 'Entradas'
-                                    : 'Saídas'}
+                                    : t === 'devolucao'
+                                        ? 'Devoluções'
+                                        : 'Saídas'}
                         </button>
                     ))}
                 </div>
@@ -102,14 +107,20 @@ export default function ExtratoList({
                     return (
                         <div
                             key={item.operacao_id}
-                            className={`extrato-item ${item.cancelado ? 'cancelado' : ''}`}
+                            className={`extrato-item ${item.cancelado && item.cancelamento_tipo === 'total' ? 'cancelado' : ''}`}
                         >
                             <div
                                 className="extrato-row"
                                 onClick={() => toggle(item)}
                             >
-                                <div className={`tx-icon ${item.cancelado ? 'cancelado' : item.tipo}`}>
-                                    {item.cancelado ? '✕' : item.tipo === 'recarga' ? '↑' : '↓'}
+                                <div className={`tx-icon ${item.cancelado && item.cancelamento_tipo === 'total' ? 'cancelado' : item.tipo}`}>
+                                    {item.cancelado && item.cancelamento_tipo === 'total'
+                                        ? '✕'
+                                        : item.tipo === 'recarga'
+                                            ? '↑'
+                                            : item.tipo === 'devolucao'
+                                                ? '↩'
+                                                : '↓'}
                                 </div>
 
                                 <div className="extrato-info">
@@ -118,11 +129,15 @@ export default function ExtratoList({
                                             ? 'Recarga'
                                             : item.tipo === 'taxa'
                                                 ? 'Taxa de ativação'
-                                                : 'Consumo'}
+                                                : item.tipo === 'devolucao'
+                                                    ? 'Devolução'
+                                                    : 'Consumo'}
                                     </strong>
                                     {item.cancelado && (
                                         <span className="cancel-badge">
-                                            Cancelado
+                                            {item.cancelamento_tipo === 'parcial'
+                                                ? 'Cancelado parcialmente'
+                                                : 'Cancelado'}
                                         </span>
                                     )}
                                     <span>
@@ -132,14 +147,14 @@ export default function ExtratoList({
 
                                 <div
                                     className={
-                                        item.cancelado
+                                        item.cancelado && item.cancelamento_tipo === 'total'
                                             ? 'value-cancelled'
-                                            : item.tipo === 'recarga'
-                                            ? 'value-positive'
-                                            : 'value-negative'
+                                            : item.valor >= 0
+                                                ? 'value-positive'
+                                                : 'value-negative'
                                     }
                                 >
-                                    {item.cancelado ? '' : item.tipo === 'recarga' ? '+' : '-'}
+                                    {item.valor > 0 ? '+' : ''}
                                     {formatBRL(item.valor)}
                                 </div>
                             </div>

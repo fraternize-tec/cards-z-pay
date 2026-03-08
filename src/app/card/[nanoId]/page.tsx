@@ -179,8 +179,19 @@ export default function CardPage({
                                 key={item.operacao_id}
                                 className="list-item extrato-row-home"
                             >
-                                <div className={`tx-icon ${item.cancelado ? 'cancelado' : item.tipo}`}>
-                                    {item.cancelado ? '✕' : item.tipo === 'recarga' ? '↑' : '↓'}
+                                <div
+                                    className={`tx-icon ${item.cancelado && item.cancelamento_tipo === 'total'
+                                        ? 'cancelado'
+                                        : item.tipo
+                                        }`}
+                                >
+                                    {item.cancelado && item.cancelamento_tipo === 'total'
+                                        ? '✕'
+                                        : item.tipo === 'recarga'
+                                            ? '↑'
+                                            : item.tipo === 'devolucao'
+                                                ? '↩'
+                                                : '↓'}
                                 </div>
 
                                 {/* TEXTO */}
@@ -190,11 +201,15 @@ export default function CardPage({
                                             ? 'Recarga'
                                             : item.tipo === 'taxa'
                                                 ? 'Taxa de ativação'
-                                                : 'Consumo'}
+                                                : item.tipo === 'devolucao'
+                                                    ? 'Devolução'
+                                                    : 'Consumo'}
                                     </strong>
                                     {item.cancelado && (
                                         <span className="cancel-badge">
-                                            Cancelado
+                                            {item.cancelamento_tipo === 'parcial'
+                                                ? 'Cancelado parcialmente'
+                                                : 'Cancelado'}
                                         </span>
                                     )}
                                     <p className="text-muted">
@@ -205,14 +220,14 @@ export default function CardPage({
                                 {/* VALOR */}
                                 <div
                                     className={
-                                        item.cancelado
+                                        item.cancelado && item.cancelamento_tipo === 'total'
                                             ? 'value-cancelled'
-                                            : item.tipo === 'recarga'
+                                            : item.valor >= 0
                                                 ? 'value-positive'
                                                 : 'value-negative'
                                     }
                                 >
-                                    {item.cancelado ? '' : item.tipo === 'recarga' ? '+' : '-'}
+                                    {item.valor > 0 ? '+' : ''}
                                     {formatBRL(item.valor)}
                                 </div>
 
