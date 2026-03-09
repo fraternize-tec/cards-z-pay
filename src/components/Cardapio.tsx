@@ -152,6 +152,7 @@ export default function Cardapio({ itens }: { itens: any[] }) {
       })}
 
       {/* BARRA TOTAL */}
+      {/* BARRA TOTAL */}
       {total > 0 && (
         <div className="cart-bar">
 
@@ -159,7 +160,17 @@ export default function Cardapio({ itens }: { itens: any[] }) {
 
             <div className="cart-info">
               <span className="cart-title">Simulação do pedido</span>
-              <span className="cart-items">{totalItens} itens</span>
+
+              <div className="cart-meta">
+                <span className="cart-items">{totalItens} itens</span>
+
+                <button
+                  className="cart-clear"
+                  onClick={() => setQuantidades({})}
+                >
+                  Limpar
+                </button>
+              </div>
             </div>
 
             <div className="cart-total">
@@ -170,7 +181,6 @@ export default function Cardapio({ itens }: { itens: any[] }) {
 
         </div>
       )}
-
     </>
   )
 }

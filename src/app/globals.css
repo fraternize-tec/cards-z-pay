@@ -1095,6 +1095,25 @@ html[data-theme='light'] .search-box {
 
   background: rgba(247,147,30,0.15);
 }
+.cart-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cart-clear {
+  border: none;
+  background: none;
+
+  font-size: 12px;
+  cursor: pointer;
+
+  color: var(--color-text-muted);
+}
+
+.cart-clear:hover {
+  color: var(--color-primary);
+}
 
 .pdv-header {
   position: sticky;
