@@ -1145,3 +1145,9 @@ html[data-theme='light'] .pdv-header {
   font-size: 14px;
   color: var(--color-text-muted);
 }
+
+.card-event {
+  padding: 20px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #163c46, #0e2a33);
+}

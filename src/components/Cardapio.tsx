@@ -4,7 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatBRL } from '@/lib/format';
 
-export default function Cardapio({ itens }: { itens: any[] }) {
+export default function Cardapio({
+  itens,
+  showBackButton = true
+}: {
+  itens: any[],
+  showBackButton?: boolean
+}) {
 
   type Item = {
     id: string
@@ -71,9 +77,11 @@ export default function Cardapio({ itens }: { itens: any[] }) {
       {/* TOPBAR */}
       <div className="cardapio-topbar">
 
-        <button className="back-btn" onClick={() => router.back()}>
-          ← Voltar
-        </button>
+        {showBackButton && (
+          <button className="back-btn" onClick={() => router.back()}>
+            ← Voltar
+          </button>
+        )}
 
         <div className="search-box">
           <span>🔍</span>
