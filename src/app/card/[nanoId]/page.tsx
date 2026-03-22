@@ -34,12 +34,10 @@ export default function CardPage({
                     .eq('nano_id', nanoId)
                     .maybeSingle(),
 
-                supabaseServer
-                    .from('card_public_extrato')
-                    .select('*')
-                    .eq('nano_id', nanoId)
-                    .order('criado_em', { ascending: false })
-                    .limit(PAGE_SIZE),
+                supabaseServer.rpc('fn_card_public_extrato', {
+                    p_nano_id: nanoId,
+                    p_limit: PAGE_SIZE,
+                }),
 
                 supabaseServer
                     .from('card_public_patrocinadores')

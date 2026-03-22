@@ -11,6 +11,8 @@ type ExtratoItem = {
   cancelamento_tipo: 'total' | 'parcial' | null;
 };
 
+const PAGE_SIZE = 25;
+
 export default async function ExtratoPage({
   params,
 }: {
@@ -18,19 +20,13 @@ export default async function ExtratoPage({
 }) {
   const { nanoId } = await params;
 
-  const { data: extrato, error } = await supabaseServer
-    .from('card_public_extrato')
-    .select(`
-      operacao_id,
-      tipo,
-      valor,
-      criado_em,
-      cancelado,
-      cancelado_em,
-      cancelamento_tipo
-    `)
-    .eq('nano_id', nanoId)
-    .order('criado_em', { ascending: false });
+  const { data: extrato, error } = await supabaseServer.rpc(
+    'fn_card_public_extrato',
+    {
+      p_nano_id: nanoId,
+      p_limit: PAGE_SIZE,
+    }
+  );
 
   if (error) {
     return (
@@ -56,7 +52,8 @@ export default async function ExtratoPage({
 
       <ExtratoList
         nanoId={nanoId}
-        items={items}
+        initialItems={items}
+        pageSize={PAGE_SIZE}
       />
     </main>
   );

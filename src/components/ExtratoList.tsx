@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatBRL } from '@/lib/format';
 import { supabaseServer } from '@/lib/supabase-server';
@@ -28,34 +28,104 @@ type DetalheOperacao = {
 
 export default function ExtratoList({
     nanoId,
-    items,
+    initialItems,
+    pageSize,
 }: {
     nanoId: string;
-    items: Item[];
+    initialItems: Item[];
+    pageSize: number;
 }) {
     const router = useRouter();
 
-    const [filtro, setFiltro] = useState<'todos' | 'recarga' | 'consumo' | 'devolucao'>('todos');
+    const [items, setItems] = useState<Item[]>(initialItems ?? []);
+    const [hasMore, setHasMore] = useState(
+        initialItems.length === pageSize
+    );
+    const [loadingMore, setLoadingMore] = useState(false);
+
+    const [filtro, setFiltro] = useState<
+        'todos' | 'recarga' | 'consumo' | 'devolucao'
+    >('todos');
 
     const [aberto, setAberto] = useState<string | null>(null);
-    const [detalhe, setDetalhe] = useState<DetalheOperacao | null>(null);
+    const [detalhes, setDetalhes] = useState<
+        Record<string, DetalheOperacao>
+    >({});
     const [loading, setLoading] = useState(false);
+
+    const observerRef = useRef<HTMLDivElement | null>(null);
 
     const filtrados = items.filter(i =>
         filtro === 'todos' ? true : i.tipo === filtro
     );
 
-    async function toggle(item: Item) {
-        if (item.tipo === 'devolucao') {
-            return;
+    // =========================
+    // 🔄 LOAD MORE
+    // =========================
+    async function loadMore() {
+        if (loadingMore || !hasMore || items.length === 0) return;
+
+        setLoadingMore(true);
+
+        const last = items[items.length - 1];
+
+        const { data, error } = await supabaseServer.rpc(
+            'fn_card_public_extrato',
+            {
+                p_nano_id: nanoId,
+                p_limit: pageSize,
+                p_before_criado_em: last.criado_em,
+                p_before_id: last.operacao_id,
+            }
+        );
+
+        if (!error && data) {
+            setItems(prev => [...prev, ...data]);
+
+            if (data.length < pageSize) {
+                setHasMore(false);
+            }
         }
+
+        setLoadingMore(false);
+    }
+
+    // =========================
+    // 👀 INTERSECTION OBSERVER
+    // =========================
+    useEffect(() => {
+        if (!observerRef.current) return;
+
+        const observer = new IntersectionObserver(
+            entries => {
+                if (entries[0].isIntersecting) {
+                    loadMore();
+                }
+            },
+            { threshold: 0.5 }
+        );
+
+        observer.observe(observerRef.current);
+
+        return () => observer.disconnect();
+    }, [items, hasMore]);
+
+    // =========================
+    // 🔽 DETALHE (CORRIGIDO)
+    // =========================
+    async function toggle(item: Item) {
+        if (item.tipo === 'devolucao') return;
+
         if (aberto === item.operacao_id) {
             setAberto(null);
-            setDetalhe(null);
             return;
         }
 
         setAberto(item.operacao_id);
+
+        // 🔥 cache → evita refetch
+        if (detalhes[item.operacao_id]) return;
+
         setLoading(true);
 
         const { data } = await supabaseServer
@@ -65,7 +135,13 @@ export default function ExtratoList({
             .eq('operacao_id', item.operacao_id)
             .maybeSingle();
 
-        setDetalhe(data);
+        if (data) {
+            setDetalhes(prev => ({
+                ...prev,
+                [item.operacao_id]: data,
+            }));
+        }
+
         setLoading(false);
     }
 
@@ -103,6 +179,7 @@ export default function ExtratoList({
             <div className="extrato-list">
                 {filtrados.map(item => {
                     const abertoAqui = aberto === item.operacao_id;
+                    const detalhe = detalhes[item.operacao_id];
 
                     return (
                         <div
@@ -145,15 +222,13 @@ export default function ExtratoList({
                                     </span>
                                 </div>
 
-                                <div
-                                    className={
-                                        item.cancelado && item.cancelamento_tipo === 'total'
-                                            ? 'value-cancelled'
-                                            : item.valor >= 0
-                                                ? 'value-positive'
-                                                : 'value-negative'
-                                    }
-                                >
+                                <div className={
+                                    item.cancelado && item.cancelamento_tipo === 'total'
+                                        ? 'value-cancelled'
+                                        : item.valor >= 0
+                                            ? 'value-positive'
+                                            : 'value-negative'
+                                }>
                                     {item.valor > 0 ? '+' : ''}
                                     {formatBRL(item.valor)}
                                 </div>
@@ -163,7 +238,8 @@ export default function ExtratoList({
                             {abertoAqui && (
                                 <div className="expand-wrapper">
                                     <div className="expand-content">
-                                        {loading && (
+
+                                        {loading && !detalhe && (
                                             <div className="expand-skeleton">
                                                 <div className="skeleton-line" />
                                                 <div className="skeleton-line" />
@@ -277,6 +353,15 @@ export default function ExtratoList({
                         </div>
                     );
                 })}
+
+                {/* 🔥 SENTINEL */}
+                {hasMore && (
+                    <div ref={observerRef} style={{ height: 40 }}>
+                        {loadingMore && (
+                            <p className="text-muted">Carregando mais...</p>
+                        )}
+                    </div>
+                )}
             </div>
         </>
     );
