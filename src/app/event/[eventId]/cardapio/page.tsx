@@ -10,7 +10,7 @@ export default async function CardapioPage({
 
   // 🔹 buscar evento
   const { data: evento } = await supabaseServer
-    .from('eventos')
+    .from('evento_publico')
     .select('id, nome, localidade, inicio, fim')
     .eq('id', eventId)
     .maybeSingle();
